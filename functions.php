@@ -1,4 +1,6 @@
 <?php
+namespace functions\http;
+
 /**
  * @param $url
  * @param bool $is_nobody
@@ -60,6 +62,30 @@ function response_error_json($code, $message) {
 }
 
 /**
+ * @param string $url
+ *
+ * @return \SimpleXMLElement
+ * @throws \Exception
+ */
+function get_rss($url) {
+    $response = get_web_object($url);
+
+    if ($response['code'] !== 200) {
+        throw new \Exception('RSS url is not valid');
+    }
+
+    try {
+        @$feed = simplexml_load_string($response['body'], 'SimpleXMLElement', LIBXML_NOCDATA);
+    } catch (\Exception $e) {
+        throw new \Exception('RSS can not parsing');
+    }
+
+    return $feed;
+}
+
+namespace functions\log;
+
+/**
  * @param $level
  * @param $message
  */
@@ -81,24 +107,40 @@ function log_warn($message) {
     simple_log('WARN', $message);
 }
 
+namespace functions\html;
+
 /**
- * @param string $url
+ * converting your html tag string.<br>
+ * adding the double quotations in your html tag.
  *
- * @return SimpleXMLElement
- * @throws Exception
+ * <code>
+ * require_once __DIR__ . '/functions.php';
+ *
+ * use functions\html;
+ *
+ * $html = '<font color=red>red string</font>';
+ * echo html\add_html_attr_quotes($html);
+ *   //=> <font color="red">red string</font>
+ *
+ * $html = '<font color=red size=2>red string</font>';
+ * echo html\add_html_attr_quotes($html);
+ *   //=> <font color="red" size="2">red string</font>
+ * </code>
+ *
+ * @param  string $html
+ * @return string html string
  */
-function get_rss($url) {
-    $response = get_web_object($url);
+function add_html_attr_quotes($html) {
+    $pattern = '/(\\w+)\s*=\\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/';
+    return preg_replace_callback($pattern, function($matches) {
+        return add_html_attr_quotes_callback($matches);
+    }, $html, -1);
+}
 
-    if ($response['code'] !== 200) {
-        throw new Exception('RSS url is not valid');
-    }
-
-    try {
-        $feed = simplexml_load_string($response['body'], 'SimpleXMLElement', LIBXML_NOCDATA);
-    } catch (Exception $e) {
-        throw new Exception('RSS can not parsing');
-    }
-
-    return $feed;
+/**
+ * @param  array   $matches
+ * @return string
+ */
+function add_html_attr_quotes_callback($matches) {
+    return $matches[1] . '="' . str_replace(array('"', "'"), '', $matches[2]) . '"';
 }
