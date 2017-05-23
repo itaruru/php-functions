@@ -94,8 +94,6 @@ function get_rss($url) {
         throw new Exception('RSS url is not valid');
     }
 
-    file_put_contents($file, $response['body']);
-
     try {
         $feed = simplexml_load_string($response['body'], 'SimpleXMLElement', LIBXML_NOCDATA);
     } catch (Exception $e) {
