@@ -64,5 +64,3 @@ function log_info($message) {
 function log_warn($message) {
     simple_log('WARN', $message);
 }
-
-?>
