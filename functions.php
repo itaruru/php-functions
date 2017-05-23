@@ -64,3 +64,17 @@ function log_info($message) {
 function log_warn($message) {
     simple_log('WARN', $message);
 }
+
+function get_rss($url) {
+    $response = get_web_object($url);
+    if ($response['code'] !== 200) {
+        throw new Exception('RSS url is not valid');
+    }
+    try {
+        $feed = simplexml_load_string($response['body'], 'SimpleXMLElement', LIBXML_NOCDATA);
+    } catch (Exception $e) {
+        throw new Exception('RSS can not parsing');
+    }
+    return $feed;
+}
+
