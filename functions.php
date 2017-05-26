@@ -37,13 +37,7 @@ function is_exists_web_object($url) {
         return false;
     }
     $response = get_web_object($url, true);
-    if ($response['code'] === 200) {
-        $status = true;
-    } else {
-        $status = false;
-    }
-
-    return $status;
+    return $response['code'] === 200;
 }
 
 /**
