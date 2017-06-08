@@ -88,22 +88,22 @@ namespace functions\log {
      * @param $level
      * @param $message
      */
-    function simple_log($level, $message) {
+    function base($level, $message) {
         echo '[' . $level . ']' . "\t" . date('Y-m-d H:i:s') . "\t" . $message . "\n";
     }
 
     /**
      * @param $message
      */
-    function log_info($message) {
-        simple_log('INFO', $message);
+    function info($message) {
+        base('INFO', $message);
     }
 
     /**
      * @param $message
      */
-    function log_warn($message) {
-        simple_log('WARN', $message);
+    function warn($message) {
+        base('WARN', $message);
     }
 }
 
