@@ -107,6 +107,27 @@ namespace functions\log {
     }
 }
 
+namespace functions\file {
+    /**
+     * @param $path
+     * @param $data
+     * @param int $dir_mode
+     *
+     * @return bool
+     */
+    function write_data($path, $data, $dir_mode = 0755) {
+        $dir = dirname($path);
+        if (!file_exists($dir)) {
+            mkdir($dir, $dir_mode, true);
+        }
+
+        $fp = fopen($path, 'w');
+        fwrite($fp, $data);
+        fclose($fp);
+        return true;
+    }
+}
+
 namespace functions\html {
     /**
      * converting your html tag string.<br>
