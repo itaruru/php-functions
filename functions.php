@@ -192,3 +192,26 @@ namespace functions\html {
         return $buffer;
     }
 }
+
+namespace functions\util {
+    /**
+     * 
+     */
+    global $bench_current_time;
+
+    /**
+     *
+     */
+    function start_bench() {
+        global $bench_current_time;
+        $bench_current_time = microtime(true);
+    }
+
+    /**
+     * @return mixed
+     */
+    function end_bench() {
+        global $bench_current_time;
+        return microtime(true) - $bench_current_time;
+    }
+}
