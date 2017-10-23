@@ -1,6 +1,7 @@
 <?php
 
 namespace functions\http {
+
     /**
      * @param $url
      * @param bool $is_nobody
@@ -8,7 +9,8 @@ namespace functions\http {
      *
      * @return array|bool
      */
-    function get_web_object($url, $is_nobody = false, $is_cookie = false) {
+    function get_web_object($url, $is_nobody = false, $is_cookie = false)
+    {
         if ($url === '') {
             return false;
         }
@@ -38,7 +40,8 @@ namespace functions\http {
      *
      * @return bool
      */
-    function is_exists_web_object($url) {
+    function is_exists_web_object($url)
+    {
         if ($url === '') {
             return false;
         }
@@ -53,7 +56,8 @@ namespace functions\http {
      *
      * @return string
      */
-    function response_error_json($code, $message) {
+    function response_error_json($code, $message)
+    {
         return json_encode((object)array(
             'error' => array(
                 'code'    => $code,
@@ -68,7 +72,8 @@ namespace functions\http {
      * @return \SimpleXMLElement
      * @throws \Exception
      */
-    function get_rss($url) {
+    function get_rss($url)
+    {
         $response = get_web_object($url);
         if ($response['code'] !== 200) {
             throw new \Exception('RSS url is not valid');
@@ -81,33 +86,68 @@ namespace functions\http {
 
         return $feed;
     }
+
+    /**
+     * Simple Router
+     *
+     * @example
+     * routes.php
+     *   <?php
+     *   require_once 'functions.php';
+     *
+     *   functions\http\simple_router();
+     *   exit();
+     *
+     * @return bool
+     */
+    function simple_router()
+    {
+        if (preg_match('/\.(?:png|jpg|jpeg|gif|ico)$/', $_SERVER["REQUEST_URI"])) {
+            return false;
+        } else {
+            $file = $_SERVER['SCRIPT_NAME'];
+            if (substr($file, -1) === '/') {
+                $file = substr($file, 0, strlen($file) - 1) . '.php';
+            } else if (strpos($file, '.php') === false) {
+                $file = $file . '.php';
+            }
+            include __DIR__ . $file;
+
+            return true;
+        }
+    }
 }
 
 namespace functions\log {
+
     /**
      * @param $level
      * @param $message
      */
-    function base($level, $message) {
+    function base($level, $message)
+    {
         echo '[' . $level . ']' . "\t" . date('Y-m-d H:i:s') . "\t" . $message . "\n";
     }
 
     /**
      * @param $message
      */
-    function info($message) {
+    function info($message)
+    {
         base('INFO', $message);
     }
 
     /**
      * @param $message
      */
-    function warn($message) {
+    function warn($message)
+    {
         base('WARN', $message);
     }
 }
 
 namespace functions\file {
+
     /**
      * @param $path
      * @param $data
@@ -115,7 +155,8 @@ namespace functions\file {
      *
      * @return bool
      */
-    function write_data($path, $data, $dir_mode = 0755) {
+    function write_data($path, $data, $dir_mode = 0755)
+    {
         $dir = dirname($path);
         if (!file_exists($dir)) {
             mkdir($dir, $dir_mode, true);
@@ -124,11 +165,13 @@ namespace functions\file {
         $fp = fopen($path, 'w');
         fwrite($fp, $data);
         fclose($fp);
+
         return true;
     }
 }
 
 namespace functions\html {
+
     /**
      * converting your html tag string.<br>
      * adding the double quotations in your html tag.
@@ -151,10 +194,11 @@ namespace functions\html {
      *
      * @return string html string
      */
-    function add_html_attr_quotes($html) {
+    function add_html_attr_quotes($html)
+    {
         $pattern = '/(\\w+)\s*=\\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/';
 
-        return preg_replace_callback($pattern, function($matches) {
+        return preg_replace_callback($pattern, function ($matches) {
             return add_html_attr_quotes_callback($matches);
         }, $html, -1);
     }
@@ -164,7 +208,8 @@ namespace functions\html {
      *
      * @return string
      */
-    function add_html_attr_quotes_callback($matches) {
+    function add_html_attr_quotes_callback($matches)
+    {
         return $matches[1] . '="' . str_replace(array('"', "'"), '', $matches[2]) . '"';
     }
 
@@ -174,7 +219,8 @@ namespace functions\html {
      * @see https://stackoverflow.com/questions/6225351/how-to-minify-php-page-html-output
      * @return mixed
      */
-    function sanitize_output($buffer) {
+    function sanitize_output($buffer)
+    {
         $search  = array(
             '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
             '/[^\S ]+\</s',     // strip whitespaces before tags, except space
@@ -194,15 +240,17 @@ namespace functions\html {
 }
 
 namespace functions\util {
+
     /**
-     * 
+     *
      */
     global $bench_current_time;
 
     /**
      *
      */
-    function start_bench() {
+    function start_bench()
+    {
         global $bench_current_time;
         $bench_current_time = microtime(true);
     }
@@ -210,8 +258,10 @@ namespace functions\util {
     /**
      * @return mixed
      */
-    function end_bench() {
+    function end_bench()
+    {
         global $bench_current_time;
+
         return microtime(true) - $bench_current_time;
     }
 }
