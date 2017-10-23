@@ -90,6 +90,8 @@ namespace functions\http {
     /**
      * Simple Router
      *
+     * @param string $base_dir base dirctory
+     *
      * @example
      * routes.php
      *   <?php
@@ -100,7 +102,7 @@ namespace functions\http {
      *
      * @return bool
      */
-    function simple_router()
+    function simple_router($base_dir)
     {
         if (preg_match('/\.(?:png|jpg|jpeg|gif|ico)$/', $_SERVER["REQUEST_URI"])) {
             return false;
@@ -111,7 +113,7 @@ namespace functions\http {
             } else if (strpos($file, '.php') === false) {
                 $file = $file . '.php';
             }
-            include __DIR__ . $file;
+            include $base_dir . $file;
 
             return true;
         }
