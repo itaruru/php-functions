@@ -97,7 +97,7 @@ namespace functions\http {
      *   <?php
      *   require_once 'functions.php';
      *
-     *   functions\http\simple_router();
+     *   functions\http\simple_router(__DIR__);
      *   exit();
      *
      * @return bool
