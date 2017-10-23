@@ -104,14 +104,14 @@ namespace functions\http {
      */
     function simple_router($base_dir)
     {
-        if (preg_match('/\.(?:png|jpg|jpeg|gif|ico)$/', $_SERVER["REQUEST_URI"])) {
+        if (preg_match('/\.(?:png|jpg|jpeg|gif|ico)$/', $_SERVER['REQUEST_URI'])) {
             return false;
         } else {
             $file = $_SERVER['SCRIPT_NAME'];
             if (substr($file, -1) === '/') {
                 $file = substr($file, 0, strlen($file) - 1) . '.php';
             } else if (strpos($file, '.php') === false) {
-                $file = $file . '.php';
+                $file .= '.php';
             }
             include $base_dir . $file;
 
