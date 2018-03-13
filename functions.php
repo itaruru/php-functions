@@ -19,7 +19,9 @@ namespace functions\http {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_NOBODY, $is_nobody);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         if ($is_cookie) {
             $cookie = 'tmp/cookie.txt';
             curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
